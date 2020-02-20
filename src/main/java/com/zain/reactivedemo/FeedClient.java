@@ -60,9 +60,15 @@ public class FeedClient {
                 .map(feedServer::feed)
                 .collect(Collectors.toList());
 
-        Mono.zip(iterable, (items) -> {
-            return FeedsBag.builder().name("The Mono Bag").creationDate(new Date()).feedMap(collectToMap(items)).build();
-        }).subscribe(feedsBag -> log.info("In the subscriber with a bag {}", feedsBag.toString()));
+        Mono.zip(
+                iterable,
+                (items) -> FeedsBag
+                        .builder()
+                        .name("The Mono Bag")
+                        .creationDate(new Date())
+                        .feedMap(collectToMap(items))
+                        .build()
+        ).subscribe(feedsBag -> log.info("In the subscriber with a bag {}", feedsBag.toString()));
     }
 
     protected static Map<String, FeedItem> collectToMap(Object[] feedItems) {
