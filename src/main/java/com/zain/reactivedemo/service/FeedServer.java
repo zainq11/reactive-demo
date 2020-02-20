@@ -1,5 +1,6 @@
 package com.zain.reactivedemo.service;
 
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -9,9 +10,10 @@ import java.util.Date;
 /**
  * Service that returns Feed
  */
-public class FeedService {
+@Component
+public class FeedServer {
 
-    public Flux<FeedItem> getFeeds() {
+    public Flux<FeedItem> feeds() {
         return Flux.fromStream(() ->
                 Arrays.stream(new FeedItem[]{
                         new FeedItem("f1", "This is the feed 1", "John Doe", new Date()),
@@ -23,7 +25,7 @@ public class FeedService {
         );
     }
 
-    public Mono<FeedItem> getFeed() {
+    public Mono<FeedItem> feed() {
         return Mono.fromCallable(() -> new FeedItem("f0", "This is the mono feed", "Mono Doe", new Date()));
     }
 
