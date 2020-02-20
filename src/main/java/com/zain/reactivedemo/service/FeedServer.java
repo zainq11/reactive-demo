@@ -25,8 +25,8 @@ public class FeedServer {
         );
     }
 
-    public Mono<FeedItem> feed() {
-        return Mono.fromCallable(() -> new FeedItem("f0", "This is the mono feed", "Mono Doe", new Date()));
+    public Mono<FeedItem> feed(String title) {
+        return Mono.fromCallable(() -> new FeedItem(title));
     }
 
 

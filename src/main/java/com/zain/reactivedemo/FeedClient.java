@@ -1,11 +1,18 @@
 package com.zain.reactivedemo;
 
+import com.zain.reactivedemo.service.FeedItem;
 import com.zain.reactivedemo.service.FeedServer;
 import com.zain.reactivedemo.service.FeedsBag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -44,5 +51,29 @@ public class FeedClient {
                         .creationDate(new Date())
                         .name("Feed Bag").build())
                 .subscribe(feedsBag -> log.info("In the subscriber with a bag {}", feedsBag.toString()));
+    }
+
+    public void storeMonosIntoBag() {
+        log.info("Case: Fetch Mono<FeedItem> and collect them into a bag");
+        Iterable<Mono<FeedItem>> iterable = Arrays.asList("1", "2", "3", "4", "5")
+                .stream()
+                .map(feedServer::feed)
+                .collect(Collectors.toList());
+
+        Mono.zip(iterable, (items) -> {
+            return FeedsBag.builder().name("The Mono Bag").creationDate(new Date()).feedMap(collectToMap(items)).build();
+        }).subscribe(feedsBag -> log.info("In the subscriber with a bag {}", feedsBag.toString()));
+    }
+
+    protected static Map<String, FeedItem> collectToMap(Object[] feedItems) {
+        return Arrays
+                .stream(feedItems)
+                .map(item -> (FeedItem) item)
+                .collect(
+                        Collectors.toMap(
+                                FeedItem::getTitle,
+                                Function.identity()
+                        )
+                );
     }
 }

@@ -23,5 +23,7 @@ public class ReactiveDemoApplication implements CommandLineRunner {
         log.info("EXECUTING the application");
         feedClient.storeFeedsIntoBag();
 
+        feedClient.storeMonosIntoBag();
+
     }
 }
